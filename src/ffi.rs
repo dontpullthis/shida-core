@@ -5,7 +5,7 @@ use std::ffi::CStr;
 pub type const_c_char_ptr = *const libc::c_char;
 
 pub unsafe fn string_to_ccharptr(string: String) -> *const libc::c_char {
-    return CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw();
+    CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw()
 }
 
 pub unsafe fn ccharptr_to_string(ccharptr: *const libc::c_char) -> Result<String, std::str::Utf8Error> {
