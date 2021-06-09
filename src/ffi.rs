@@ -6,8 +6,8 @@ pub type ConstCCharPtr = *const libc::c_char;
 pub type MutCCharPtr = *mut libc::c_char;
 pub type Size = libc::size_t;
 
-pub unsafe fn bytes_vec_to_ccharptr(input: &Vec<u8>) -> MutCCharPtr {
-    CString::from_vec_unchecked(input.to_vec()).into_raw()
+pub fn bytes_vec_to_ccharptr(input: &Vec<u8>) -> MutCCharPtr {
+    unsafe { CString::from_vec_unchecked(input.to_vec()).into_raw() }
 }
 
 pub fn ccharptr_to_bytes_vec(input: ConstCCharPtr) -> Vec<u8> {
@@ -17,12 +17,12 @@ pub fn ccharptr_to_bytes_vec(input: ConstCCharPtr) -> Vec<u8> {
 }
 
 
-pub unsafe fn string_to_ccharptr(string: String) -> ConstCCharPtr {
-    CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw()
+pub fn string_to_ccharptr(string: String) -> ConstCCharPtr {
+    unsafe { CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw() }
 }
 
-pub unsafe fn ccharptr_to_string(ccharptr: ConstCCharPtr) -> Result<String, std::str::Utf8Error> {
-    let cstr = CStr::from_ptr(ccharptr);
+pub fn ccharptr_to_string(ccharptr: ConstCCharPtr) -> Result<String, std::str::Utf8Error> {
+    let cstr = unsafe { CStr::from_ptr(ccharptr) };
     
     match cstr.to_str() {
         Ok(s) => Ok(String::from(s)),
@@ -30,6 +30,6 @@ pub unsafe fn ccharptr_to_string(ccharptr: ConstCCharPtr) -> Result<String, std:
     }
 }
 
-pub unsafe fn malloc<T>(len: usize) -> *mut T {
-    libc::malloc(mem::size_of::<T>() * len) as *mut T
+pub fn malloc<T>(len: usize) -> *mut T {
+    unsafe { libc::malloc(mem::size_of::<T>() * len) as *mut T }
 }
