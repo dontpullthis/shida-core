@@ -17,11 +17,11 @@ pub fn ccharptr_to_bytes_vec(input: ConstCCharPtr) -> Vec<u8> {
 }
 
 
-pub fn str_to_ccharptr(string: &str) -> ConstCCharPtr {
+pub fn str_to_ccharptr(string: &str) -> MutCCharPtr {
     unsafe { CString::from_vec_unchecked(Vec::from(string)).into_raw() }
 }
 
-pub fn string_to_ccharptr(string: String) -> ConstCCharPtr {
+pub fn string_to_ccharptr(string: String) -> MutCCharPtr {
     unsafe { CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw() }
 }
 
@@ -32,6 +32,18 @@ pub fn ccharptr_to_string(ccharptr: ConstCCharPtr) -> Result<String, std::str::U
         Ok(s) => Ok(String::from(s)),
         Err(e) => Err(e),
     }
+}
+
+pub fn string_vec_to_cchar_ptr(input: &Vec<String>) -> *mut MutCCharPtr {
+    let size = input.len();
+    let result = malloc::<MutCCharPtr>(size);
+    for (index, kv) in input.iter().enumerate() {
+        unsafe {
+            let val = result.offset(index as isize);
+            *val = str_to_ccharptr(kv.as_str());
+        }
+    }
+    result
 }
 
 pub fn malloc<T>(len: usize) -> *mut T {
