@@ -17,6 +17,10 @@ pub fn ccharptr_to_bytes_vec(input: ConstCCharPtr) -> Vec<u8> {
 }
 
 
+pub fn str_to_ccharptr(string: &str) -> ConstCCharPtr {
+    unsafe { CString::from_vec_unchecked(Vec::from(string)).into_raw() }
+}
+
 pub fn string_to_ccharptr(string: String) -> ConstCCharPtr {
     unsafe { CString::from_vec_unchecked(Vec::from(string.as_bytes())).into_raw() }
 }
