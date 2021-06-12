@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::ffi::CStr;
 use std::mem;
+use std::str::Utf8Error;
 
 pub type ConstCCharPtr = *const libc::c_char;
 pub type MutCCharPtr = *mut libc::c_char;
@@ -44,6 +45,19 @@ pub fn string_vec_to_cchar_ptr(input: &Vec<String>) -> *mut MutCCharPtr {
         }
     }
     result
+}
+
+pub fn cchar_ptr_to_vec_string(paramsc: Size, paramsv: *const ConstCCharPtr) -> Result<Vec<String>, Utf8Error> {
+    let mut result = Vec::new();
+    for i in 0..paramsc {
+        let ch: ConstCCharPtr = unsafe { *paramsv.offset(i as isize) };
+        let param = match ccharptr_to_string(ch) {
+            Ok(string) => string,
+            Err(e) => return Err(e),
+        };
+        result.push(param);
+    }
+    Ok(result)
 }
 
 pub fn malloc<T>(len: usize) -> *mut T {
