@@ -1,13 +1,13 @@
-use crate::ffi::{ConstCCharPtr, Size};
+use crate::ffi::typedefs::{ConstBytePtr, ConstCCharPtr, Size};
 
 #[allow(unused_imports)]
 pub type CanHandleFunc = fn(connection_type: ConstCCharPtr) -> bool;
 
 #[allow(unused_imports)]
-type InitReaderFunc = fn(paramsc: Size, paramsv: *const ConstCCharPtr) -> (*const u8, ConstCCharPtr);
+type InitReaderFunc = fn(paramsc: Size, paramsv: *const ConstCCharPtr) -> (ConstBytePtr, ConstCCharPtr);
 
 #[allow(unused_imports)]
-type ReadFunc = fn(conn_ptr: *const u8) -> (ConstCCharPtr, ConstCCharPtr);
+type ReadFunc = fn(conn_ptr: ConstBytePtr) -> (ConstCCharPtr, ConstCCharPtr);
 
 #[repr(C)]
 pub struct Module {
