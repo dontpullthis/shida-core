@@ -1,10 +1,11 @@
+use crate::ffi::app_config::AppConfig;
 use crate::ffi::typedefs::{ConstBytePtr, ConstCCharPtr, Size};
 
 #[allow(unused_imports)]
 pub type CanHandleFunc = fn(connection_type: ConstCCharPtr) -> bool;
 
 #[allow(unused_imports)]
-type InitReaderFunc = fn(paramsc: Size, paramsv: *const ConstCCharPtr) -> (ConstBytePtr, ConstCCharPtr);
+type InitReaderFunc = fn(app_config: *const AppConfig, paramsc: Size, paramsv: *const ConstCCharPtr) -> (ConstBytePtr, ConstCCharPtr);
 
 #[allow(unused_imports)]
 type ReadFunc = fn(conn_ptr: ConstBytePtr) -> (ConstCCharPtr, ConstCCharPtr);
